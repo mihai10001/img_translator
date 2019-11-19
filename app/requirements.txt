@@ -1,0 +1,6 @@
+langdetect
+pyspellchecker
+opencv-python
+pytesseract
+
+
