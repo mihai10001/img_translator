@@ -12,4 +12,4 @@ def word_split(string):
 
 def word_join(iterable, separator=' '):
     # Joins the elements in the iterable by the separator
-    separator.join(iterable)
+    return separator.join(iterable)
