@@ -28,6 +28,9 @@ def spell_check(string, language, advanced=False):
 
 
 def save_puncts(words):
+    # Strip words from pre and post punctuation, creating an array of the
+    # punctuations of each word, of this structure: [[pre0, pos0], [pre1, pos1], ...]
+    # Example: "two, words..." => [["", ","], ["", "..."]]
     punctuations = []
     for word in words:
         pre_punct = re.search('^[.,;!?()]+', word)
@@ -41,6 +44,7 @@ def save_puncts(words):
 
 
 def load_puncts(words, punctuations):
+    # Load back saved punctuations into words
     for i, word in enumerate(words):
         word = punctuations[i][0] + word + punctuations[i][1]
     return words
