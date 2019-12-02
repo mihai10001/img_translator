@@ -1,5 +1,5 @@
-from language.language_detector import detect_language
-from language.spell_checker import spell_checker
+from language.language_detect import detect_language
+from language.spell_check import spell_checker
 from language.string_ops import clean
 
 
