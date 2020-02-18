@@ -2,5 +2,4 @@ langdetect
 pyspellchecker
 opencv-python
 pytesseract
-
-
+flask

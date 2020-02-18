@@ -26,6 +26,9 @@ def spell_check(string, language, advanced=False):
 
         return word_join(words)
 
+    # If language isn't supported, return the initial string
+    return string
+
 
 def save_puncts(words):
     # Strip words from pre and post punctuation, creating an array of the
