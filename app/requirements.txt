@@ -3,4 +3,6 @@ pyspellchecker
 opencv-python
 pytesseract
 
+flask
+
 

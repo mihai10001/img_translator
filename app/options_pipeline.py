@@ -1,5 +1,5 @@
 from language.language_detect import detect_language
-from language.spell_check import spell_checker
+from language.spell_check import spell_check
 from language.string_ops import clean
 
 
@@ -8,5 +8,7 @@ def pipeline(string, user_options):
 
     if user_options.get('detect_lang'):
         lang, prob = detect_language(string)
+
     if user_options.get('spell_checker'):
-        corrected_string = spell_checker(string)
+        if lang:
+            corrected_string = spell_check(string)
