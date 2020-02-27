@@ -1,5 +1,8 @@
 import cv2
 from pytesseract import image_to_string, image_to_data, Output
+# Windows Env
+import pytesseract
+pytesseract.pytesseract.tesseract_cmd = r'X:\Code\Tesseract-OCR\tesseract.exe'
 
 
 def load_image(image_path, flag=cv2.IMREAD_COLOR):

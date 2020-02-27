@@ -11,17 +11,6 @@
       height: 100%;
     }
 
-    .stripes {
-      color: white;
-      background: repeating-linear-gradient(
-        45deg,
-        darkblue,
-        darkblue 10px,
-        slateblue 10px,
-        slateblue 20px
-      );
-    }
-
     .btn-label {
       position: relative;
       left: -12px;
@@ -35,18 +24,11 @@
       padding-bottom: 0;
     }
 
-    @keyframes rainbow{
-      0%{color: orange;}
-      10%{color: purple;}
-      20%{color: red;}
-      30%{color: CadetBlue;}
-      40%{color: yellow;}
-      50%{color: coral;}
-      60%{color: green;}
-      70%{color: cyan;}
-      80%{color: DeepPink;}
-      90%{color: DodgerBlue;}
-      100%{color: orange;}
+    .color-lightskyblue {
+      color: lightskyblue;
+    }
+    .bg-lightskyblue {
+      background-color: lightskyblue !important;
     }
 
     </style>
@@ -58,24 +40,23 @@
 
     <title>Image Translator</title>
   </head>
-  <body class="bg-dark p-2">
+  <body class="py-2 bg-light">
 
-    <nav class="fixed-top shadow bg-dark border-bottom border-warning">
+    <nav class="fixed-top shadow bg-dark border-bottom border-info">
       <div class="container my-2">
-        <div class="row">
-          <div class="col-8">
-            <div class="h5 p-1 text-warning"><b>Image Translator - a multiple choice OCR web-app</b></div>
+        <div class="row text-center color-lightskyblue">
+          <div class="col-lg-5 h4 text-lg-left">
+            <i class="fas fa-image"></i>
+            <i class="fas fa-language ml-1" style="font-size: 1.75rem; transform: translateY(1px);"></i>
+            <span class="ml-4">Image Translator</span>
           </div>
-          <div class="col-4 text-right">
-            <span class="h3 text-white">
-              <i class="far fa-image text-success"></i>
-              <i class="fas fa-sliders-h text-success"></i>
-            </span>
+          <div class="col-lg-7 h6 text-lg-right lead">
+            A multi-choice OCR web app
           </div>
-          <div class="col-12">
+          <div class="col-lg-12 mt-2 h6 text-left">
             <form method="POST">
               <a href="{{ url_for('home') }}">
-                <button type="button" class="btn btn-sm btn-labeled btn-light"><span class="btn-label"><i class="fas fa-arrow-left"></i></span>Upload</button>
+                <button type="button" class="btn btn-sm btn-labeled btn-light"><span class="btn-label"><i class="fas fa-chevron-left"></i></span>Upload</button>
               </a>
               <!-- <button type="submit" name="original_button" value="original" class="btn btn-sm btn-labeled btn-light"><span class="btn-label"><i class="fas fa-sync"></i></span>Original</button>
               <span class="float-right">
@@ -87,7 +68,7 @@
       </div>
     </nav>
 
-    <div class="container" id="align" style="height: 15%"></div>
+    <div class="container" style="height: 15%"></div>
     <div class="container" style="height: 2%"></div>
 
     <!-- Optional JavaScript -->

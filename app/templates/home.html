@@ -11,16 +11,13 @@
       height: 100%;
     }
 
-    .stripes {
-      color: white;
-      background: repeating-linear-gradient(
-        45deg,
-        darkblue,
-        darkblue 10px,
-        slateblue 10px,
-        slateblue 20px
-      );
+    .color-lightskyblue {
+      color: lightskyblue;
     }
+    .bg-lightskyblue {
+      background-color: lightskyblue !important;
+    }
+
     </style>
 
     <!-- Bootstrap CSS -->
@@ -31,47 +28,50 @@
 
     <title>Image Translator</title>
   </head>
-  <body class="bg-dark p-2">
+  <body class="py-2 bg-light">
 
-    <nav class="fixed-top shadow bg-dark border-bottom border-warning">
+    <nav class="fixed-top shadow bg-dark border-bottom border-info">
       <div class="container my-2">
-        <div class="row">
-          <div class="col-8">
-            <div class="h5 p-1 text-warning"><b>Image Translator - a multiple choice OCR web-app</b></div>
+        <div class="row text-center color-lightskyblue">
+          <div class="col-lg-5 h4 text-lg-left">
+            <i class="fas fa-image"></i>
+            <i class="fas fa-language ml-1" style="font-size: 1.75rem; transform: translateY(1px);"></i>
+            <span class="ml-4">Image Translator</span>
           </div>
-          <div class="col-4 text-right">
-            <span class="h3 text-white">
-              <i class="far fa-image text-success"></i>
-              <i class="fas fa-sliders-h text-success"></i>
-            </span>
+          <div class="col-lg-7 h6 text-lg-right lead">
+            A multi-choice OCR web app
           </div>
         </div>
       </div>
     </nav>
 
-    <div class="container" style="height: 10%"></div>
+    <div class="container" style="height: 13%"></div>
 
-    <div class="container p-2 rounded" style="background-color: slateblue">
-      <div class="row my-2">
-        <div class="col-sm-12">
+    <div class="container px-y py-4 rounded bg-dark shadow">
+      <div class="row">
+        <div class="col-lg-12">
           <div class="card h5">
-            <div class="card-header"><b>Upload the image file</b></div>
+            <div class="card-header">
+              <i class="fas fa-upload mx-2"></i>
+              Upload the image file
+            </div>
             <div class="card-body">
-              <div>Only .png .jpg .jpeg file types allowed for now,</div>
-              <div>with a maximum file size of 128 megabytes</div>
+              <div class="lead">Only .png .jpg .jpeg file types allowed for now, with a maximum file size of 128 megabytes</div>
               <hr class="my-3">
               <form method="POST" enctype="multipart/form-data">
-                <div class="input-group" style="font-size: 0.9rem">
+                <div class="input-group" style="font-size: 1rem">
                   <div class="input-group-prepend">
-                    <button type="submit" name="submit_button" value="upload_image" class="btn btn-block btn-dark" style="font-size: 0.9rem"><b>Upload</b></button>
+                    <button type="submit" name="submit_button" value="upload_image" class="btn bg-lightskyblue" style="font-size: 0.9rem;"><b>Upload</b></button>
                   </div>
                   <div class="custom-file">
                     <input type="file" class="custom-file-input" id="customFile" name="file">
                     <label class="custom-file-label" for="customFile">Choose file</label>
                   </div>
                 </div>
-
               </form>
+
+              <div class="alert alert-info alert-dismissible mt-4 h6" role="alert">
+              </div>
             </div>
           </div>
         </div>
@@ -90,9 +90,12 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropper/4.0.0/cropper.js"></script>
     <script>
     // Add the following code if you want the name of the file appear on select
+    $(".alert").hide();
     $(".custom-file-input").on("change", function() {
       var fileName = $(this).val().split("\\").pop();
       $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+      $(".alert").html('You have chosen the file: <kbd>' + fileName + '</kbd> Don\'t forget to press Upload' + '<button class="close" data-dismiss="alert">×</button>');
+      $(".alert").show();
     });
     </script>
 
