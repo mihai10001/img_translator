@@ -75,7 +75,7 @@ def return_bounding_boxes(image, thresh):
 #     cv2.waitKey()
 #     return string
 
-image = load_image('test.PNG')
+# image = load_image('detect/test.PNG')
 # tresh = preprocess_dilation(image)
-pytesseract_to_boxes(image)
+# pytesseract_to_boxes(image)
 # return_bounding_boxes(image, tresh)
