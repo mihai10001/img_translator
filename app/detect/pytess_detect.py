@@ -10,7 +10,7 @@ def load_image(image_path, flag=cv2.IMREAD_COLOR):
         image = cv2.imread(image_path, flag)
         return image
     except Exception as e:
-        print('Unable to load image')
+        print('Unable to load image', e)
 
 
 def pytesseract_to_string(image):
@@ -56,7 +56,7 @@ def return_bounding_boxes(image, thresh):
         # cv2.rectangle(image, (x, y), (x+w, y+h), (0, 255, 0), 2)
 
     for box in bounding_boxes_coords:
-        crop_img = image[box[1]:box[1]+box[3], box[0]:box[0]+box[2]]
+        crop_img = image[box[1]:box[1] + box[3], box[0]:box[0] + box[2]]
         print(pytesseract_to_string(crop_img))
         cv2.imshow("cropped", crop_img)
         cv2.waitKey()
