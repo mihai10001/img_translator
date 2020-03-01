@@ -14,14 +14,18 @@
     .btn-label {
       position: relative;
       left: -12px;
-      padding: 10px 12px;
-      background: rgba(0,0,0,0.15);
+      padding: 6px 12px;
+      background: rgba(135,206,250,0.6);
       border-radius: 3px 0 0 3px;
     }
 
     .btn-labeled {
       padding-top: 0;
       padding-bottom: 0;
+    }
+
+    .header-grad {
+      background-image: linear-gradient(to bottom left, gainsboro, white);
     }
 
     .color-lightskyblue {
@@ -34,7 +38,35 @@
 
     .shadow-lightskyblue {
       border: 1px solid lightskyblue;
-      box-shadow: 0px 0px 13px 4px rgba(135,206,250,1);
+      box-shadow: 0px 0px 13px 4px rgba(135,206,250,0.3);
+    }
+
+    .carousel .carousel-indicators li {
+      transform: translateY(20px);
+      background-color: rgb(0, 0, 0);
+    }
+
+    .carousel .carousel-indicators .active {
+      background-color: lightskyblue;
+    }
+
+    .carousel-control-next,
+    .carousel-control-prev {
+      filter: invert(100%);
+    }
+
+    .custom-button label {
+      text-align: left;
+    }
+
+    .btn-group-vertical .btn-secondary.active {
+      color: black !important;
+      background-image: linear-gradient(to bottom left, lightskyblue, gainsboro, white, white);
+    }
+
+    .custom-submit {
+      border: 1px solid black !important;
+      background-image: linear-gradient(to top right, lightskyblue, gainsboro, white);
     }
 
     </style>
@@ -42,27 +74,30 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.6/cropper.css">
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.6/cropper.css"> -->
 
     <title>Image Translator</title>
   </head>
   <body class="py-2 bg-light">
 
     <nav class="fixed-top shadow bg-dark border-bottom border-info">
-      <div class="container my-2">
-        <div class="row text-center color-lightskyblue">
-          <div class="col-lg-5 h4 text-lg-left">
+      <div class="container my-1">
+        <div class="row text-center justify-content-between ">
+          <kbd class="col-lg-4 mx-1 h4 text-lg-left color-lightskyblue">
             <i class="fas fa-image"></i>
             <i class="fas fa-language ml-1" style="font-size: 1.75rem; transform: translateY(1px);"></i>
-            <span class="ml-4">Image Translator</span>
-          </div>
-          <div class="col-lg-7 h6 text-lg-right lead">
-            A multi-choice OCR web app
-          </div>
-          <div class="col-lg-12 mt-2 h6 text-left">
+            <span class="ml-2">Image Translator</span>
+          </kbd>
+          <kbd class="col-lg-5 d-none d-lg-block mx-1 h4 text-lg-right color-lightskyblue">
+            A multiple-choice OCR web app
+          </kbd>
+          <div class="col-lg-12 my-1 h6 text-left">
             <form method="POST">
               <a href="{{ url_for('home') }}">
-                <button type="button" class="btn btn-sm btn-labeled btn-light"><span class="btn-label"><i class="fas fa-chevron-left"></i></span>Upload</button>
+                <button type="button" class="btn btn-sm btn-labeled btn-light header-grad">
+                  <span class="btn-label"><i class="fas fa-chevron-left"></i></span>
+                  Upload
+                </button>
               </a>
               <!-- <button type="submit" name="original_button" value="original" class="btn btn-sm btn-labeled btn-light"><span class="btn-label"><i class="fas fa-sync"></i></span>Original</button>
               <span class="float-right">
@@ -74,27 +109,27 @@
       </div>
     </nav>
 
-    <div class="container" style="height: 21%"></div>
+    <div class="container d-none d-lg-block" style="height: 8%"></div>
+    <div class="container d-block d-lg-none" style="height: 14%"></div>
 
     <div class="container">
-      <div class="row my-2 py-4 rounded bg-dark shadow-lightskyblue">
-        <div class="col-sm-12" id="accordion">
-          <div class="card h5">
-            <div class="card-header" style="cursor: pointer">
-              <span class="d-block" data-toggle="collapse" data-target="#collapseBody" aria-expanded="true" aria-controls="collapseBody">
-                <i class="fas fa-image mx-2"></i>
+      <div class="row mt-4 rounded bg-dark">
+        <div class="col-lg-12 p-2" id="accordion">
+          <div class="card">
+            <div class="card-header h5 p-2 header-grad" style="cursor: pointer">
+              <div class="d-block p-2" data-toggle="collapse" data-target="#collapseBody" aria-expanded="true" aria-controls="collapseBody">
+                <i class="fas fa-image mr-2"></i>
                 Preview
-                <span class="float-right">
+                <span class="float-right" id="switchIcon">
                  <i class="fas fa-plus"></i>
                 </span>
-              </span>
+              </div>
             </div>
             <div id="collapseBody" class="collapse" data-parent="#accordion">
-              <div class="card-body mx-auto">
+              <div class="card-body p-2">
                 {% if filename %}
-                  <small class="text-success">Image uploaded succesfully: <b>{{ filename }}</b></small>
-                  <div class="my-2"></div>
-                  <img src="{{url_for('static', filename=filename)}}" class="rounded" style="max-width: 100%"/>
+                  <div class="lead text-center text-success mb-2">Image uploaded succesfully: <b>{{ filename }}</b></div>
+                  <img src="{{url_for('static', filename=filename)}}" class="rounded mx-auto d-block w-100">
                 {% else %}
                   <div>No image uploaded yet !</div>
                 {% endif %}
@@ -103,6 +138,122 @@
           </div>
         </div>
       </div>
+
+
+      <div class="row mt-5 rounded bg-dark shadow-lightskyblue">
+        <div class="col-lg-12 p-2">
+          <div class="card">
+            <div class="card-header h5 p-3 text-truncate header-grad">
+              <i class="fas fa-atlas mr-2"></i>
+              <b>Step 1</b> - Choose detection method
+            </div>
+
+            <div class="card-body p-1">
+              <!-- CEHCK CAROUSEL BOOSTRAP AND ADD MISSING THING THEN data-interval="false"
+              THEN MAKE HIDDEN INPUT -->
+              <div id="demo" class="carousel slide" data-interval="false">
+
+                <!-- Indicators -->
+                <ul class="carousel-indicators">
+                  <li data-target="#demo" data-slide-to="0" class="active"></li>
+                  <li data-target="#demo" data-slide-to="1"></li>
+                  <li data-target="#demo" data-slide-to="2"></li>
+                </ul>
+
+                <!-- The slideshow -->
+                <div class="carousel-inner">
+                  <div class="carousel-item active">
+                    <!-- <img src="la.jpg" alt="Los Angeles" width="1100" height="500"> -->
+                    <div class="row">
+                      <div class="col-1"></div>
+                      <div class="col-10 col-lg-4">
+                        <img src="data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%221151%22%20height%3D%22250%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%201151%20250%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%23holder_17093b9a198%20text%20%7B%20fill%3Argba(255%2C255%2C255%2C.75)%3Bfont-weight%3Anormal%3Bfont-family%3AHelvetica%2C%20monospace%3Bfont-size%3A58pt%20%7D%20%3C%2Fstyle%3E%3C%2Fdefs%3E%3Cg%20id%3D%22holder_17093b9a198%22%3E%3Crect%20width%3D%221151%22%20height%3D%22250%22%20fill%3D%22%23777%22%3E%3C%2Frect%3E%3Cg%3E%3Ctext%20x%3D%22408.5078125%22%20y%3D%22150.8%22%3E1151x250%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E"
+                         class="rounded mx-auto d-block" height="188" width="218"/>
+                      </div>
+                      <div class="col-lg-6 d-none d-lg-block">
+                        <div class="h5 mt-2">
+                          # Title :D
+                        </div>
+                        <div class="mt-4">
+                          Lorem ipsum dolor sit amet, consectetur <br>
+                          Fusce bibendum massa elit, ac auctor elget. <br>
+                          Duis fringilla ullamcorper malesuada.  <br>
+                        </div>
+
+                      </div>
+                      <div class="col-1"></div>
+                    </div>
+
+                  </div>
+                  <!-- <div class="carousel-item">
+                    <img src="chicago.jpg" alt="Chicago" width="1100" height="500">
+                    <img src="{{url_for('static', filename=filename)}}" class="rounded" height="230" class="d-block w-100"/>
+                  </div>
+                  <div class="carousel-item">
+                    <img src="ny.jpg" alt="New York" width="1100" height="500">
+                    <img src="{{url_for('static', filename=filename)}}" class="rounded" height="230" class="d-block w-100"/>
+                  </div> -->
+                </div>
+
+                <!-- Left and right controls -->
+                <a class="carousel-control-prev" href="#demo" data-slide="prev">
+                  <span class="carousel-control-prev-icon"></span>
+                </a>
+                <a class="carousel-control-next" href="#demo" data-slide="next">
+                  <span class="carousel-control-next-icon"></span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row mt-3 rounded bg-dark">
+        <div class="col-lg-12 p-2">
+          <div class="card">
+            <div class="card-header h5 p-3 text-truncate header-grad">
+              <i class="fas fa-globe-europe mr-2"></i>
+              <b>Step 2</b> - Choose translation options
+            </div>
+
+            <div class="card-body p-2">
+              <div class="btn-group-vertical btn-group-toggle w-100 custom-button" data-toggle="buttons">
+                <label class="btn btn-secondary active">
+                  <input type="radio" name="options" id="option1" autocomplete="off" checked> Default
+                </label>
+                <label class="btn btn-secondary">
+                  <input type="radio" name="options" id="option2" autocomplete="off"> -
+                </label>
+                <label class="btn btn-secondary">
+                  <input type="radio" name="options" id="option3" autocomplete="off"> -
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row mt-3 rounded bg-dark">
+        <div class="col-lg-12 p-2">
+          <div class="card">
+            <div class="card-header h5 p-3 text-truncate header-grad">
+              <div class="row">
+                <div class="col mb-2">
+                  <i class="fas fa-diagnoses mr-2"></i>
+                  <b>Step 3</b> - Press analyse
+                </div>
+                <div class="col-md-8">
+                  <button type="button" class="btn btn-block custom-submit">
+                    <i class="fas fa-check-circle mr-1"></i>
+                    Analyse
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="mt-2 lead text-center">Tip: You can press Analyse without changing anything else</div>
 
     </div>
 
@@ -114,6 +265,18 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jscolor/2.0.4/jscolor.js"></script> -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.6/cropper.min.js"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.6/cropper.min.js"></script> -->
+    <script>
+      $('#accordion').on('hide.bs.collapse', function (e) {
+        $('#switchIcon').html('<i class="fas fa-plus"></i>');
+      });
 
+      $('#accordion').on('show.bs.collapse', function (e) {
+        $('#switchIcon').html('<i class="fas fa-minus"></i>');
+      });
+
+      // $('.panel').on('hidden.bs.collapse', function (e) {
+      //     alert('Event fired on #' + e.currentTarget.id);
+      // })
+    </script>
 </body>

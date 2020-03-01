@@ -6,7 +6,6 @@ from cleanup import remove_static_files
 
 UPLOAD_FOLDER = os.getcwd() + '/static'
 ALLOWED_EXTENSIONS = set(['png', 'jpeg', 'jpg'])
-INPUT_FILENAME = ''
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -20,7 +19,6 @@ def allowed_file(filename):
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
-    global INPUT_FILENAME
     remove_static_files()
 
     if request.method == 'POST':
@@ -38,24 +36,24 @@ def home():
                 return redirect(request.url)
 
             if file and allowed_file(file.filename):
-                INPUT_FILENAME = secure_filename(file.filename)
-                file.save(os.path.join(UPLOAD_FOLDER, INPUT_FILENAME))
-                return redirect(url_for('uploaded'))
+                secured_filename = secure_filename(file.filename)
+                file.save(os.path.join(UPLOAD_FOLDER, secured_filename))
+                return redirect(url_for('uploaded', file_name=secured_filename))
 
     return render_template('home.html')
 
 
-@app.route('/uploaded', methods=['GET', 'POST'])
-def uploaded():
+@app.route('/uploaded/<file_name>', methods=['GET', 'POST'])
+def uploaded(file_name):
 
-    if INPUT_FILENAME:
+    if file_name:
         if request.method == 'POST':
             # if download_button:
             #     return send_file(os.path.join(UPLOAD_FOLDER, INPUT_FILENAME), as_attachment=True)
-            image = load_image(os.path.join(UPLOAD_FOLDER, INPUT_FILENAME))
+            image = load_image(os.path.join(UPLOAD_FOLDER, file_name))
             print(image)
 
-        return render_template('uploaded.html', filename=INPUT_FILENAME)
+        return render_template('uploaded.html', filename=file_name)
     else:
         return render_template('uploaded.html', error='Image not uploaded!')
 
