@@ -11,17 +11,47 @@
       height: 100%;
     }
 
+    .btn.btn-sm {
+      border-radius: 6px;
+    }
+
+    .btn-label {
+      position: relative;
+      left: -10px;
+      padding: 6px 14px;
+      background: rgba(135,206,250,0.6);
+      border-radius: 6px 0 0 6px;
+    }
+
+    .btn-labeled {
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+
     .color-lightskyblue {
       color: lightskyblue;
     }
 
-    .bg-lightskyblue {
-      background-color: lightskyblue !important;
+    .btn.bg-lightskyblue {
+      background: lightskyblue;
     }
 
-    .shadow-lightskyblue {
-      border: 1px solid lightskyblue;
-      box-shadow: 0px 0px 13px 4px rgba(135,206,250,0.5);
+    .bg-color {
+      background: #E0E5EC;
+    }
+
+    .card .card-header {
+      background-color: transparent;
+    }
+
+    .card.neu-morphism {
+      border-radius: 6px;
+      box-shadow:  20px 20px 60px #A3B1C6,
+                  -20px -20px 60px #ffffff;
+    }
+
+    .card.neu-morphism.shadow-lightskyblue {
+      box-shadow: 0px 0px 13px 4px rgba(135, 206, 250, 0.6);
     }
 
     </style>
@@ -34,37 +64,37 @@
 
     <title>Image Translator</title>
   </head>
-  <body class="py-2 bg-light">
+  <body class="py-2 bg-color">
 
-    <nav class="fixed-top shadow bg-dark border-bottom border-info">
-      <div class="container my-1">
-        <div class="row text-center justify-content-between ">
-          <kbd class="col-lg-4 mx-1 h4 text-lg-left color-lightskyblue">
+    <nav class="fixed-top bg-dark rounded-bottom">
+      <div class="container mt-2">
+        <div class="row p-1">
+          <kbd class="col-lg-9 h4 color-lightskyblue text-truncate">
             <i class="fas fa-image"></i>
             <i class="fas fa-language ml-1" style="font-size: 1.75rem; transform: translateY(1px);"></i>
-            <span class="ml-2">Image Translator</span>
+            <span class="ml-2">Image Translator - a multiple-choice OCR web app</span>
           </kbd>
-          <kbd class="col-lg-5 d-none d-lg-block mx-1 h4 text-lg-right color-lightskyblue">
-            A multiple-choice OCR web app
-          </kbd>
+          <div class="col-lg-3 px-1 text-lg-right">
+            <button type="button" class="btn btn-sm btn-labeled bg-light" onClick="window.location.reload()">
+              <i class="fas fa-redo-alt"></i>
+            </button>
+          </div>
         </div>
       </div>
     </nav>
 
-    <div class="container d-none d-lg-block" style="height: 8%"></div>
-    <div class="container d-block d-lg-none" style="height: 14%"></div>
+    <div class="container" style="height: 6%"></div>
 
-    <div class="container">
-      <div class="row mt-4 rounded bg-dark" id="fileUploadRow">
-        <div class="col-lg-12 p-2">
-          <div class="card">
-            <div class="card-header h5">
+    <div class="container px-3">
+      <div class="row mt-5">
+        <div class="col-lg-12 p-1">
+          <div class="card border-0 neu-morphism" id="cardShadow">
+            <div class="card-header h5 p-3">
               <i class="fas fa-upload mx-2"></i>
-              Upload the image file
+              <b>Upload the image</b>
+              <div class="mt-3 p-1 lead text-truncate">Only .png .jpg .jpeg file types allowed for now, with a maximum file size of 128 megabytes</div>
             </div>
             <div class="card-body">
-              <div class="lead">Only .png .jpg .jpeg file types allowed for now, with a maximum file size of 128 megabytes</div>
-              <hr class="my-3">
               <form method="POST" enctype="multipart/form-data">
                 <div class="input-group" style="font-size: 1rem">
                   <div class="input-group-prepend">
@@ -101,7 +131,7 @@
     $(".custom-file-input").on("change", function() {
       var fileName = $(this).val().split("\\").pop();
       $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
-      $("#fileUploadRow").addClass("shadow-lightskyblue");
+      $("#cardShadow").addClass("shadow-lightskyblue");
       $(".alert").html('You have chosen the file: <kbd>' + fileName + '</kbd> Don\'t forget to press Upload' + '<button class="close" data-dismiss="alert">×</button>');
       $(".alert").show();
     });
