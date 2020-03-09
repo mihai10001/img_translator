@@ -69,12 +69,13 @@
     <nav class="fixed-top bg-dark rounded-bottom">
       <div class="container mt-2">
         <div class="row p-1">
-          <kbd class="col-lg-9 h4 color-lightskyblue text-truncate">
+          <kbd class="col-lg-8 h4 color-lightskyblue text-truncate">
             <i class="fas fa-image"></i>
             <i class="fas fa-language ml-1" style="font-size: 1.75rem; transform: translateY(1px);"></i>
             <span class="ml-2">Image Translator - a multiple-choice OCR web app</span>
           </kbd>
-          <div class="col-lg-3 px-1 text-lg-right">
+          <div class="col-lg-4 px-1 text-right">
+            <i class="fas fa-home mr-2 text-white" style="font-size: 1.5rem; transform: translateY(5px);"></i>
             <button type="button" class="btn btn-sm btn-labeled bg-light" onClick="window.location.reload()">
               <i class="fas fa-redo-alt"></i>
             </button>
@@ -128,10 +129,13 @@
     <script>
     // Add the following code if you want the name of the file appear on select
     $(".alert").hide();
+
     $(".custom-file-input").on("change", function() {
       var fileName = $(this).val().split("\\").pop();
       $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+
       $("#cardShadow").addClass("shadow-lightskyblue");
+
       $(".alert").html('You have chosen the file: <kbd>' + fileName + '</kbd> Don\'t forget to press Upload' + '<button class="close" data-dismiss="alert">×</button>');
       $(".alert").show();
     });
