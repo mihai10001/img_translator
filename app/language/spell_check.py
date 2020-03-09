@@ -1,6 +1,6 @@
 import re
 from spellchecker import SpellChecker
-from string_ops import word_split, word_join
+from language.string_ops import word_split, word_join
 
 # Languages supported by pyspellchecker by default
 # They are based on frequency list dictionaries, you can easily add more
