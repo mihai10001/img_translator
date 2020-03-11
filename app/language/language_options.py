@@ -1,11 +1,42 @@
+from babel import Locale
 from language.language_detect import detect_language
 from language.spell_check import spell_check
 from language.string_ops import clean
 from language.translate import g_bulk_translate
 
 
+possible_options = {
+    # 0: Translate to [*] (Automatic detection)
+    '0': {
+        'translate': 'true'
+    },
+    # 1: Detect lang. + Translate to [*]
+    '1': {
+        'detect_lang': 'true',
+        'translate': 'true'
+    },
+    # 2: Detect lang. + Spell check + Translate to [*]
+    '2': {
+        'detect_lang': 'true',
+        'spell_check': 'true',
+        'translate': 'true'
+    },
+    # 3: Detect lang. + Spell check
+    '3': {
+        'detect_lang': 'true',
+        'spell_check': 'true'
+    },
+    # 4: Do nothing (just OCR)
+    '4': {}
+}
+
+
+def get_country_language(country):
+    return Locale.parse('und_' + country).language
+
+
 def apply_options(string_list, user_options):
-    resulted_string_list = None
+    resulted_string_list = string_list
 
     if user_options.get('detect_lang'):
         spell_check_option = user_options.get('spell_check')
@@ -13,7 +44,6 @@ def apply_options(string_list, user_options):
         resulted_string_list = [el[0] for el in detected_results]
         detected_langs = [el[1] for el in detected_results]
         most_probable_language = max(set(detected_langs), key=detected_langs.count)
-
 
     if user_options.get('translate'):
         to_language = user_options.get('translate_to')

@@ -3,4 +3,5 @@ opencv-python
 langdetect
 pyspellchecker
 googletrans
+Babel
 flask
