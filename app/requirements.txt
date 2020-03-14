@@ -1,5 +1,7 @@
+numpy
 pytesseract
 opencv-python
+nms
 langdetect
 pyspellchecker
 googletrans
