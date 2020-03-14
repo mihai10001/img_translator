@@ -24,9 +24,12 @@ def home():
     # remove_static_files()
 
     if request.method == 'POST':
-        submit_button = request.form.get('submit_button')
+        translate_to = request.form.get('translate_to')
+        type_button = request.form.get('type_analyse')
+        handwrite_button = request.form.get('handwrite_analyse')
+        custom_button = request.form.get('custom_analyse')
 
-        if submit_button == 'upload_image':
+        if any([type_button, handwrite_button, custom_button]):
             # check if the post request has the file part
             if 'file' not in request.files:
                 return redirect(request.url)
@@ -40,7 +43,15 @@ def home():
             if file and allowed_file(file.filename):
                 secured_filename = secure_filename(file.filename)
                 file.save(os.path.join(UPLOAD_FOLDER, 'images', secured_filename))
-                return redirect(url_for('uploaded', filename=secured_filename))
+
+                if type_button:
+                    option = option_dumps('0', translate_to)
+                    return redirect(url_for('analysed', filename=secured_filename, user_option=option))
+                if handwrite_button:
+                    option = option_dumps('0', translate_to)
+                    return redirect(url_for('analysed', filename=secured_filename, user_option=option))
+                if custom_button:
+                    return redirect(url_for('uploaded', filename=secured_filename))
 
     return render_template('home.html')
 
@@ -51,16 +62,14 @@ def uploaded(filename):
     if filename:
         if request.method == 'POST':
             options_radio = request.form.get('options_radio')
-            analyse_button = request.form.get('analyse_button')
             translate_to = request.form.get('translate_to')
+            analyse_button = request.form.get('analyse_button')
 
             # if download_button:
             #     return send_file(os.path.join(UPLOAD_FOLDER, INPUT_FILENAME), as_attachment=True)
             if analyse_button:
-                selected_option = possible_options.get(options_radio)
-                selected_option['translate_to'] = get_country_language(translate_to)
-                option_dumps = json.dumps(selected_option)
-                return redirect(url_for('analysed', filename=filename, user_option=option_dumps))
+                option = option_dumps(options_radio, translate_to)
+                return redirect(url_for('analysed', filename=filename, user_option=option))
 
         return render_template('uploaded.html', filename=filename)
     else:
@@ -75,12 +84,16 @@ def analysed(filename, user_option):
         image = load_image(os.path.join(UPLOAD_FOLDER, 'images', filename))
         random_strings = ["Buna sera, doamna", "Oare ce facem aici?", "Unde e aici ?"]
         random_text = apply_options(random_strings, user_option)
-        # if request.method == 'POST':
-        #     print('wow')
 
         return render_template('analysed.html', filename=filename, random_text=random_text, image=image)
     else:
         return render_template('analysed.html', error='Image not uploaded!')
+
+
+def option_dumps(options_index, translate_to):
+    selected_option = possible_options.get(options_index)
+    selected_option['translate_to'] = get_country_language(translate_to)
+    return json.dumps(selected_option)
 
 
 if __name__ == "__main__":

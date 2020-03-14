@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <style>
+
+    html, body {
+      height: 100%;
+    }
+
+    .btn.btn-sm {
+      border-radius: 6px;
+    }
+
+    .btn-label {
+      position: relative;
+      left: -10px;
+      padding: 6px 14px;
+      background: rgba(135,206,250,0.6);
+      border-radius: 6px 0 0 6px;
+    }
+
+    .btn-labeled {
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+
+    .color-lightskyblue {
+      color: lightskyblue;
+    }
+
+    .bg-color {
+      background: #E0E5EC;
+    }
+
+    .shadow-lightskyblue {
+      box-shadow: 0px 0px 13px 4px lightskyblue;
+    }
+
+    .carousel .carousel-indicators li {
+      transform: translateY(20px);
+      background-color: rgb(0, 0, 0);
+    }
+
+    .carousel .carousel-indicators .active {
+      background-color: lightskyblue;
+    }
+
+    .carousel-control-next,
+    .carousel-control-prev {
+      filter: invert(100%);
+    }
+
+    .custom-button label {
+      text-align: left;
+    }
+
+    .btn-group-vertical.btn-group-toggle .btn.btn-secondary.active {
+      border: white;
+      background-color: rgba(135, 206, 250, 0.6);
+      color: black;
+    }
+
+    .card .card-header {
+      background-color: transparent;
+    }
+
+    .card.neu-morphism {
+      border-radius: 8px;
+      box-shadow:  20px 20px 60px #A3B1C6,
+                  -20px -20px 60px #ffffff;
+    }
+
+    @media screen and (max-width: 992px) {
+      .card.neu-morphism {
+        border-radius: 8px;
+        box-shadow:  20px 20px 60px #A3B1C6;
+      }
+    }
+
+    .card.neu-morphism.shadow-lightskyblue {
+      box-shadow: 0px 0px 13px 4px rgba(135, 206, 250, 0.6);
+    }
+
+    .tip {
+      position: relative;
+      z-index: 10;
+    }
+
+    </style>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.6/cropper.css"> -->
+
+    <title>Image Translator</title>
+  </head>
+  <body class="py-2 bg-color">
+
+    <nav class="fixed-top bg-dark rounded-bottom">
+      <div class="container mt-2">
+        <div class="row">
+          <div class="col-1 col-md-4 col-lg-6 pl-1 h4 color-lightskyblue text-truncate">
+            <kbd>
+              <i class="fas fa-image ml-2"></i>
+              <i class="fas fa-language ml-1" style="font-size: 1.65rem; transform: translateY(2px);"></i>
+            </kbd>
+            <span class="ml-2 d-none d-md-inline">Image Translator</span>
+             <!-- - a multiple-choice OCR web app -->
+          </div>
+          <div class="col-11 col-md-8 col-lg-6 pr-1 text-right">
+            <i class="fas fa-diagnoses mr-2 text-secondary" style="font-size: 1.5rem; transform: translateY(5px);"></i>
+            <form method="POST" class="d-inline">
+              <a href="{{ url_for('home') }}">
+                <button type="button" class="btn btn-sm btn-labeled bg-light">
+                  <span class="btn-label"><i class="fas fa-home"></i></span>
+                  Home
+                </button>
+              </a>
+              {% if filename %}
+              <a href="{{ url_for('uploaded', filename=filename) }}">
+                <button type="button" class="btn btn-sm btn-labeled bg-light">
+                  <span class="btn-label"><i class="fas fa-cogs"></i></span>
+                  Custom
+                </button>
+              </a>
+              {% endif %}
+              <!-- <button type="submit" name="original_button" value="original" class="btn btn-sm btn-labeled btn-light"><span class="btn-label"><i class="fas fa-sync"></i></span>Original</button>
+              <span class="float-right">
+                <button type="submit" name="download_button" value="download" class="btn btn-sm btn-labeled btn-success"><span class="btn-label"><i class="fas fa-save"></i></span><b>Save</b></button>
+              </span> -->
+            </form>
+            <button type="button" class="btn btn-sm btn-labeled bg-light" onClick="window.location.reload()">
+              <i class="fas fa-redo-alt"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container" style="height: 6%"></div>
+
+    <div class="container mt-3 px-3">
+      <div class="row">
+        <div class="col-lg-12 p-1" id="accordion">
+          <div class="card border-0 neu-morphism">
+            <div class="card-header border-0 h5 p-2" style="cursor: pointer">
+              <div class="d-block p-2" data-toggle="collapse" data-target="#collapseBody" aria-expanded="true" aria-controls="collapseBody">
+                <i class="fas fa-image mr-2"></i>
+                Results
+                <span class="float-right" id="switchIcon">
+                 <i class="fas fa-plus"></i>
+                </span>
+              </div>
+            </div>
+            <div id="collapseBody" class="collapse" data-parent="#accordion">
+              <div class="card-body p-2">
+                {% if filename %}
+                  <div class="lead text-center text-success mb-2">Image uploaded succesfully: <b>{{ filename }}</b></div>
+                  <img src="{{url_for('static', filename='images/' + filename)}}" class="rounded mx-auto d-block w-100">
+                  {{ random_text }}
+                {% else %}
+                  <div>No image uploaded yet !</div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tip text-center text-white" style="font-size: 2rem"><i class="fas fa-ellipsis-h"></i></div>
+
+    </div>
+
+    <div class="container" style="height: 2%"></div>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS, then FontAwesome-->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jscolor/2.0.4/jscolor.js"></script> -->
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.6/cropper.min.js"></script> -->
+    <script>
+      $('#accordion').on('hide.bs.collapse', function (e) {
+        $('#switchIcon').html('<i class="fas fa-plus"></i>');
+      });
+
+      $('#accordion').on('show.bs.collapse', function (e) {
+        $('#switchIcon').html('<i class="fas fa-minus"></i>');
+      });
+
+      // $('.panel').on('hidden.bs.collapse', function (e) {
+      //     alert('Event fired on #' + e.currentTarget.id);
+      // })
+    </script>
+</body>
