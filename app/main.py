@@ -68,11 +68,12 @@ def home():
     return render_template('home.html')
 
 
-@app.route('/uploaded/<filename>', methods=['GET', 'POST'])
-def uploaded(filename):
+@app.route('/customize/<filename>', methods=['GET', 'POST'])
+def customize(filename):
 
     if filename:
         if request.method == 'POST':
+            detection_method_index = request.form.get('carousel_index')
             options_radio = request.form.get('options_radio')
             translate_to = request.form.get('translate_to')
             analyse_button = request.form.get('analyse_button')
@@ -80,12 +81,13 @@ def uploaded(filename):
             # if download_button:
             #     return send_file(os.path.join(UPLOAD_FOLDER, INPUT_FILENAME), as_attachment=True)
             if analyse_button:
+                detection_method = possible_detection_methods.get(detection_method_index)
                 option = option_dumps(options_radio, translate_to)
-                return redirect(url_for('analysed', filename=filename, user_option=option))
+                return redirect(url_for('analyse', filename=filename, detection_method=detection_method, user_option=option))
 
-        return render_template('uploaded.html', filename=filename)
+        return render_template('customize.html', filename=filename)
     else:
-        return render_template('uploaded.html', error='Image not uploaded!')
+        return render_template('customize.html', error='Image not uploaded!')
 
 
 @app.route('/analysed/<filename>/<user_option>', methods=['GET', 'POST'])
