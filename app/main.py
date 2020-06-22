@@ -21,37 +21,49 @@ def allowed_file(filename):
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
-    # remove_static_files()
 
+    # POST: Triggered when the user presses a HTML button.
     if request.method == 'POST':
+        # Read language input / "trigger" button values:
+        # If the input is empty or the buttons have not been pressed
+        # their values will be None ( null ).
         translate_to = request.form.get('translate_to')
         type_button = request.form.get('type_analyse')
         handwrite_button = request.form.get('handwrite_analyse')
         custom_button = request.form.get('custom_analyse')
+        # Set default detection method
+        default_det_method = 'microsoft'
+        default_hand_det_method = 'microsoft_advanced'
+        default_options = option_dumps('0', translate_to)
 
+        # Check if indeed a button has been pressed to continue,
+        # by checking if the values are different from None ( null ).
         if any([type_button, handwrite_button, custom_button]):
-            # check if the post request has the file part
+
             if 'file' not in request.files:
                 return redirect(request.url)
 
             file = request.files['file']
-            # if user does not select file, browser also
-            # submit an empty part without filename
             if file.filename == '':
                 return redirect(request.url)
 
             if file and allowed_file(file.filename):
                 secured_filename = secure_filename(file.filename)
-                file.save(os.path.join(UPLOAD_FOLDER, 'images', secured_filename))
+                file.save(os.path.join(UPLOAD_FOLDER, 'results', secured_filename))
 
+                # React to each button accordingly
                 if type_button:
-                    option = option_dumps('0', translate_to)
-                    return redirect(url_for('analysed', filename=secured_filename, user_option=option))
+                    return redirect(url_for('analyse',
+                                            filename=secured_filename,
+                                            detection_method=default_det_method,
+                                            user_option=default_options))
                 if handwrite_button:
-                    option = option_dumps('0', translate_to)
-                    return redirect(url_for('analysed', filename=secured_filename, user_option=option))
+                    return redirect(url_for('analyse',
+                                            filename=secured_filename,
+                                            detection_method=default_hand_det_method,
+                                            user_option=default_options))
                 if custom_button:
-                    return redirect(url_for('uploaded', filename=secured_filename))
+                    return redirect(url_for('customize', filename=secured_filename))
 
     return render_template('home.html')
 
