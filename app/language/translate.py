@@ -22,7 +22,9 @@ def g_bulk_translate(string_list, to_language, from_language=None):
 
     if from_language:
         translations = translator.translate(string_list, src=from_language, dest=to_language)
+        return [result.text for result in translations], from_language
     else:
         translations = translator.translate(string_list, dest=to_language)
-
-    return [(result.origin, result.text) for result in translations]
+        detected_langs = [result.src for result in translations]
+        most_probable_language = max(set(detected_langs), key=detected_langs.count)
+        return [result.text for result in translations], most_probable_language
