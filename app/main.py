@@ -1,17 +1,23 @@
 import os
 import json
-from flask import Flask, render_template, request, redirect, url_for, send_file, jsonify
+from flask import Flask, render_template, request, redirect, url_for
 from werkzeug.utils import secure_filename
+# Detection pipeline wrappers
+from detect.detection_methods import possible_detection_methods
 from detect.pytess_detect import load_image
-from language.language_options import apply_options, possible_options, get_country_language
+from detect.google_ocr_api.vision_api import analyze_image as g_analyze, draw_resulted_images as g_draw_results
+from detect.microsoft_ocr_api.computer_vision import analyze_image as ms_analyze, draw_resulted_images as ms_draw_results
+# Translation pipeline wrapper
+from language.language_options import apply_options, possible_lang_options, get_country_language
 # from cleanup import remove_static_files_win
+# call remove_static_files() to clean 
 
 UPLOAD_FOLDER = os.path.join(os.getcwd(), 'static')
 ALLOWED_EXTENSIONS = set(['png', 'jpeg', 'jpg'])
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-app.config['MAX_CONTENT_LENGTH'] = 128 * 1024 * 1024
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 
 
 def allowed_file(filename):
