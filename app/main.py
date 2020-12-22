@@ -26,6 +26,18 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
+@app.after_request
+def add_header(r):
+    """
+    Disable caching as for now, it happens server-side.
+    """
+    r.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+    r.headers['Pragma'] = 'no-cache'
+    r.headers['Expires'] = '0'
+    r.headers['Cache-Control'] = 'public, max-age=0'
+    return r
+
+
 @app.route('/', methods=['GET', 'POST'])
 def home():
 
@@ -101,12 +113,12 @@ def customize(filename):
 def analyse(filename, detection_method, user_option):
     user_option = json.loads(user_option)
     to_language = user_option.get('translate_to')
+    image_path = os.path.join(UPLOAD_FOLDER, 'results', filename)
 
-    if filename:
+    if os.path.isfile(image_path):
         # Detection and translation pipeline for Microsoft, Google APIs
         if detection_method in ['google', 'google_advanced', 'microsoft', 'microsoft_advanced']:
             advanced_mode = True if 'advanced' in detection_method else False
-            image_path = os.path.join(UPLOAD_FOLDER, 'results', filename)
             if 'google' in detection_method:
                 overall_text, words, words_and_boxes = g_analyze(image_path, advanced_mode)
             elif 'microsoft' in detection_method:
