@@ -1,9 +1,12 @@
-numpy
+Pillow
+matplotlib
+google-cloud-vision
+azure-cognitiveservices-vision-computervision
 pytesseract
 opencv-python
-nms
 langdetect
 pyspellchecker
-googletrans
+googletrans==2.4.1             
 Babel
-flask
+# numpy (optional) if you want to plot graphs/from spell_checker_obsolete.py
+# flask (optional) already contained in the Docker image
