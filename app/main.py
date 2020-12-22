@@ -4,7 +4,8 @@ from flask import Flask, render_template, request, redirect, url_for
 from werkzeug.utils import secure_filename
 # Detection pipeline wrappers
 from detect.detection_methods import possible_detection_methods
-from detect.pytess_detect import load_image
+from detect.abbyy_api.abbyy_detect import abbyy_to_string
+from detect.tesseract_sdk.pytess_detect import pytesseract_to_string
 from detect.google_ocr_api.vision_api import analyze_image as g_analyze, draw_resulted_images as g_draw_results
 from detect.microsoft_ocr_api.computer_vision import analyze_image as ms_analyze, draw_resulted_images as ms_draw_results
 # Translation pipeline wrapper
@@ -136,6 +137,25 @@ def analyse(filename, detection_method, user_option):
 
             else:
                 return render_template('results.html', error='There was no text detected or the image was not accepted by the API!')
+
+        elif detection_method in ['tesseract', 'abbyy']:
+            if detection_method == 'tesseract':
+                overall_text = pytesseract_to_string(image_path)
+            elif detection_method == 'abbyy':
+                overall_text = abbyy_to_string(image_path)
+            if overall_text:
+                translated_text, det_lang = apply_options([overall_text], user_option)
+                translated_text = translated_text.pop()
+                overall_text = overall_text.replace('\n', '<br />')
+                translated_text = translated_text.replace('\n', '<br />')
+                return render_template('results.html',
+                                       detected_language=det_lang,
+                                       to_language=to_language,
+                                       original_text=overall_text,
+                                       translated_text=translated_text)
+            else:
+                return render_template('results.html', error='There was no text detected or the image was not accepted by the API!')
+
     else:
         return render_template('results.html', error='Image not uploaded!')
 
