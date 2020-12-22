@@ -6,8 +6,8 @@ import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
 from google.cloud import vision
 
-
 # Path to your Google Vision Account Token
+# Make sure not to make public your Token! ( Very important! Don't make it public on GitHub, etc. )
 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = r".\\detect\\google_ocr_api\\ServiceAccountToken.json"
 
 
@@ -45,7 +45,8 @@ def google_ocr_image_api(image_path):
     return response.text_annotations
 
 
-# The 'results' object contains various fields that describe the handwriten text found on the image.
+# The 'results' object contains various fields that describe the regions of text
+# found in the 'document', handwriten text as well as diacritics.
 def google_ocr_doc_api(image_path):
     client = vision.ImageAnnotatorClient()
     content = load_raw_image(image_path)
@@ -165,7 +166,7 @@ def prepare_plot(image_data, image_path):
     elif 500 <= img_width < 1300:
         font_size = int((img_width * 12) / 1200)
     else:
-        font_size = int((img_width * 24) / 1200) 
+        font_size = int((img_width * 24) / 1200)
 
     image = Image.open(BytesIO(image_data))
     ax = plt.imshow(image)
