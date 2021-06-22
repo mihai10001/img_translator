@@ -1,0 +1,43 @@
+html, body {
+  height: 100%;
+}
+
+.btn-labeled {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+label.custom-file-label {
+  border-radius: 8px;
+}
+
+label.custom-file-label::after {
+  color: white;
+  background-color: #343A40;
+  border-left: 4px solid lightskyblue;
+  border-radius: 8px;
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px;
+}
+
+.color-lightskyblue {
+  color: lightskyblue;
+}
+
+.bg-color {
+  background: #E0E5EC;
+}
+
+.card .card-header {
+  background-color: transparent;
+}
+
+.card.neu-morphism {
+  border-radius: 6px;
+  box-shadow:  20px 20px 60px #A3B1C6,
+              -20px -20px 60px #ffffff;
+}
+
+.card.neu-morphism.shadow-lightskyblue {
+  box-shadow: 0px 0px 13px 4px rgba(135, 206, 250, 0.6);
+}
