@@ -4,16 +4,16 @@ from flask import Flask, render_template, request, redirect, url_for
 from werkzeug.utils import secure_filename
 # Detection pipeline wrappers
 from detect.detection_methods import possible_detection_methods
-from detect.abbyy_api.abbyy_detect import abbyy_to_string
+from detect.abbyy_api.abbyy_vision_api import abbyy_to_string
 from detect.tesseract_sdk.pytess_detect import pytesseract_to_string
-from detect.google_ocr_api.vision_api import analyze_image as g_analyze, draw_resulted_images as g_draw_results
-from detect.microsoft_ocr_api.computer_vision import analyze_image as ms_analyze, draw_resulted_images as ms_draw_results
+from detect.google_ocr_api.google_vision_api import analyze_image as g_analyze, draw_resulted_images as g_draw_results
+from detect.microsoft_ocr_api.microsoft_computer_vision import analyze_image as ms_analyze, draw_resulted_images as ms_draw_results
 # Translation pipeline wrapper
 from language.language_options import apply_options, possible_lang_options, get_country_language
 # from cleanup import remove_static_files_win
 # call remove_static_files() to clean 
 
-UPLOAD_FOLDER = os.path.join(os.getcwd(), 'static')
+UPLOAD_FOLDER = os.path.join(os.getcwd(), 'static', 'results')
 ALLOWED_EXTENSIONS = set(['png', 'jpeg', 'jpg'])
 
 app = Flask(__name__)
@@ -51,8 +51,8 @@ def home():
         handwrite_button = request.form.get('handwrite_analyse')
         custom_button = request.form.get('custom_analyse')
         # Set default detection method
-        default_det_method = 'microsoft'
-        default_hand_det_method = 'microsoft_advanced'
+        default_det_method = 'google'
+        default_hand_det_method = 'google_advanced'
         default_options = option_dumps('0', translate_to)
 
         # Check if indeed a button has been pressed to continue,
@@ -68,7 +68,7 @@ def home():
 
             if file and allowed_file(file.filename):
                 secured_filename = secure_filename(file.filename)
-                file.save(os.path.join(UPLOAD_FOLDER, 'results', secured_filename))
+                file.save(os.path.join(UPLOAD_FOLDER, secured_filename))
 
                 # React to each button accordingly
                 if type_button:
@@ -113,7 +113,7 @@ def customize(filename):
 def analyse(filename, detection_method, user_option):
     user_option = json.loads(user_option)
     to_language = user_option.get('translate_to')
-    image_path = os.path.join(UPLOAD_FOLDER, 'results', filename)
+    image_path = os.path.join(UPLOAD_FOLDER, filename)
 
     if os.path.isfile(image_path):
         # Detection and translation pipeline for Microsoft, Google APIs
