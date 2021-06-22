@@ -31,9 +31,9 @@
 .country-select .selected-flag{
 	z-index:1;
 	position:relative;
-	width:72px;
+	width:36px;
 	height:100%;
-	padding:0 0 0 16px
+	padding:0 0 0 8px
 }
 .country-select .selected-flag .flag{
 	position:absolute;
@@ -45,7 +45,7 @@
 	position:absolute;
 	top:50%;
 	margin-top:-4px;
-	right:8px;
+	right:2px;
 	width:0;
 	height:0;
 	border-left:5px solid transparent;
@@ -58,20 +58,21 @@
 }
 .country-select .country-list{
 	position:absolute;
-	z-index:2;
+	top:-160px;
+	z-index:100;
 	list-style:none;
 	text-align:left;
 	padding:0;
 	margin:0 0 0 -1px;
-	-webkit-box-shadow:1px 1px 4px rgba(0, 0, 0, 0.2);
-	box-shadow:10px 10px 40px rgba(0, 0, 0, 0.6);
+	-webkit-box-shadow:0px 0px 45px 10px rgba(0,0,0,0.2);
+	box-shadow:0px 0px 45px 10px rgba(0,0,0,0.2);
 	background-color:white;
 	border:1px solid #ccc;
 	border-radius: 6px;
 	white-space:nowrap;
 	max-height:150px;
-	overflow-y: scroll;
-	scrollbar-width: none; //Firefox
+	overflow-y:scroll;
+	scrollbar-width:none; //Firefox
 }
 .country-select .country-list::-webkit-scrollbar { 
     display: none;  // Safari and Chrome
@@ -106,7 +107,7 @@
 .country-select.inside input,
 .country-select.inside input[type=text]{
 	padding-right:6px;
-	padding-left:66px;
+	padding-left:52px;
 	margin-left:0
 }
 .country-select.inside .flag-dropdown{
@@ -114,7 +115,7 @@
 	left:0
 }
 .country-select.inside .selected-flag{
-	width:64px
+	width:46px
 }
 .country-select.inside .flag-dropdown:hover{
 	cursor:pointer
