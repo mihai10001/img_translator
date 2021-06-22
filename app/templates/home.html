@@ -1,9 +1,5 @@
-<!doctype html>
-<html lang="en">
+<html>
   <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <style>
 
@@ -72,20 +68,14 @@
       box-shadow: 0px 0px 13px 4px rgba(135, 206, 250, 0.6);
     }
 
-    .tip {
-      position: relative;
-      z-index: 10;
-    }
-
     </style>
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
-    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.6/cropper.min.css"> -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/countrySelectorig.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/countrySelect.css') }}">
 
-    <title>Image Translator</title>
+    <title>OCR and Translate</title>
   </head>
   <body class="py-2 bg-color">
 
@@ -93,12 +83,11 @@
       <div class="container mt-2">
         <div class="row">
           <div class="col-4 col-md-7 col-lg-8 pl-1 h4 color-lightskyblue text-truncate">
-            <kbd>
-              <i class="fas fa-image ml-2"></i>
-              <i class="fas fa-language ml-1" style="font-size: 1.65rem; transform: translateY(2px);"></i>
-            </kbd>
-            <span class="ml-2 d-none d-md-inline">Image Translator</span>
-             <!-- - a multiple-choice OCR web app -->
+            <span class="ml-2 d-none d-md-inline">
+              <a href="{{ url_for('app.home') }}" style="color: inherit; text-decoration:none">
+                OCR and Translate
+              </a>
+            </span>
           </div>
           <div class="col-8 col-md-5 col-lg-4 pr-1 text-right">
             <i class="fas fa-home mr-2 text-secondary" style="font-size: 1.5rem; transform: translateY(5px);"></i>
@@ -121,7 +110,8 @@
               <div class="card-header h5 p-3">
                 <i class="fas fa-upload mx-2"></i>
                 <b>Upload the image</b>
-                <div class="mt-3 p-1 lead text-truncate">Only .png .jpg .jpeg file types allowed for now, with a maximum file size of 128 megabytes</div>
+                <div class="mt-3 p-1 lead">Only .png .jpg .jpeg file types allowed for now, with a maximum file size of 16 megabytes</div>
+                <div class="p-1 lead">Also, you may be limited by character count or text regions present in the image depending on the API (free tier)</div>
               </div>
               <div class="card-body">
                 <div class="custom-file">
@@ -134,8 +124,6 @@
             </div>
           </div>
         </div>
-
-        <div class="tip text-center text-white" style="font-size: 2rem"><i class="fas fa-ellipsis-h"></i></div>
 
         <div class="row d-none" id="resultRow">
           <div class="col-lg-12 p-1">
@@ -154,7 +142,7 @@
                     </div>
                   </div>
                   <div class="col-lg-7 mt-3 mt-lg-0 text-center text-lg-right">
-                    <div class="btn-group" role="group" aria-label="Basic example">
+                    <div class="btn-group" role="group" id="result-btn-group">
                       <button type="submit" name="type_analyse" value="type_analyse" class="btn bg-dark text-white border-white">
                         <i class="fas fa-font mr-2" style="color: limegreen"></i>
                         Typed Analyse
@@ -178,6 +166,10 @@
       </form>
     </div>
 
+    <div class="d-none" id="spinner">
+      <img src="{{ url_for('static', filename='img/Loading-Ellipsis.gif') }}" width="200" class="rounded mx-auto d-block">
+    </div>
+
     <div class="container" style="height: 2%"></div>
 
     <!-- Optional JavaScript -->
@@ -197,21 +189,22 @@
     </script>
 
     <script>
-    // Add the following code if you want the name of the file appear on select
-    $('.alert').hide();
+      $('.alert').hide();
 
-    $('#customFile').on('change', function() {
-      var fileName = $(this).val().split('\\').pop();
-      $(this).siblings('.custom-file-label').addClass('selected').html(fileName);
+      $('#customFile').on('change', function() {
+        var fileName = $(this).val().split('\\').pop();
+        $(this).siblings('.custom-file-label').addClass('selected').html(fileName);
 
-      $('#cardShadow').addClass('shadow-lightskyblue');
-      $('#resultRow').removeClass('d-none');
+        $('#cardShadow').addClass('shadow-lightskyblue');
+        $('#resultRow').removeClass('d-none');
 
-      $('.alert').html('You uploaded <kbd class="ml-1">' + fileName + '</kbd>' + '<button class="close" data-dismiss="alert">×</button>');
-      $('.alert').show();
+        $('.alert').html('You uploaded <kbd class="ml-1">' + fileName + '</kbd>' + '<button class="close" data-dismiss="alert">×</button>');
+        $('.alert').show();
+      });
 
-      window.scrollTo(0,document.body.scrollHeight);
-    });
+      $("#result-btn-group button").click(function(){
+          $('#spinner').removeClass('d-none');
+      });
     </script>
 
 </body>
