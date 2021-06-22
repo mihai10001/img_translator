@@ -1,6 +1,7 @@
 import time
 import ntpath
 import requests
+import json
 from PIL import Image
 from io import BytesIO
 import matplotlib.pyplot as plt
@@ -9,17 +10,18 @@ from matplotlib.patches import Polygon
 
 # Variables to your Microsoft Computer Vision Account
 # Make sure not to make public those variables! ( Very important! Don't make it public on GitHub, etc. )
-subscription_key = "..."  # Place your subscription key here
-endpoint = "..."          # Place your endpoint here
-simple_headers = {'Ocp-Apim-Subscription-Key': subscription_key}
-headers = {'Ocp-Apim-Subscription-Key': subscription_key, 'Content-Type': 'application/octet-stream'}
+with open(r'.\\env\\MicrosoftServiceAccountToken.json') as f:
+    credentials = json.load(f)
+simple_headers = {'Ocp-Apim-Subscription-Key': credentials['subscription_key']}
+headers = {'Ocp-Apim-Subscription-Key': credentials['subscription_key'], 'Content-Type': 'application/octet-stream'}
 
-# -NOT USED- Additional info endpoint, like faces, objects, people, etc. 
-analyze_url = endpoint + "vision/v3.0/analyze"
+# Config. variables for the Microsoft Computer Vision API
+# -NOT USED- Additional info endpoint, like faces, objects, people, etc.
+analyze_url = credentials['endpoint'] + "/vision/v3.0/analyze"
 # Text based endpoint, gives greater accuracy, for documents, etc.
-text_url = endpoint + "/vision/v3.0/read/analyze"
+text_url = credentials['endpoint'] + "/vision/v3.0/read/analyze"
 # OCR based endpoint, is faser and still gives good results
-ocr_url = endpoint + "vision/v3.0/ocr"
+ocr_url = credentials['endpoint'] + "/vision/v3.0/ocr"
 ocr_params = {'language': 'unk', 'detectOrientation': 'true'}
 
 

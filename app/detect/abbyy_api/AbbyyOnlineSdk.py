@@ -2,7 +2,7 @@
 
 # Usage: process.py <input file> <output file> [-l <Language>] [-pdf|-txt|-rtf|-docx|-xml]
 
-import shutil
+import json
 
 import xml.dom.minidom
 try:
@@ -33,16 +33,18 @@ class Task:
 
 class AbbyyOnlineSdk:
     # Warning! This is for easier out-of-the box usage of the sample only. Change to https:// for production use
-    # Change to http://cloud-westus.ocrsdk.com if you created your application in US location	
-    ServerUrl = "http://cloud-eu.ocrsdk.com/"
+    # Change to http://cloud-westus.ocrsdk.com if you created your application in US location
+    with open(r'.\\env\\AbbyAccountToken.json') as f:
+        credentials = json.load(f)
+    ServerUrl = credentials['server_url']
 
     # To create an application and obtain a password,
     # register at https://cloud.ocrsdk.com/Account/Register
     # More info on getting your application id and password at
     # https://ocrsdk.com/documentation/faq/#faq3
     # Make sure not to make public those variables! ( Very important! Don't make it public on GitHub, etc. )
-    ApplicationId = "..."
-    Password = "..."
+    ApplicationId = credentials['application_id']
+    Password = credentials['password']
     Proxies = {}
 
     def process_image(self, file_path, settings):

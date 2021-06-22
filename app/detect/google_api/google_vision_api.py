@@ -1,14 +1,14 @@
-import os
 import ntpath
 from PIL import Image
 from io import BytesIO
 import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
 from google.cloud import vision
+from google.oauth2 import service_account
 
 # Path to your Google Vision Account Token
 # Make sure not to make public your Token! ( Very important! Don't make it public on GitHub, etc. )
-os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = r".\\detect\\google_ocr_api\\ServiceAccountToken.json"
+credentials = service_account.Credentials.from_service_account_file(r'.\\env\\GoogleServiceAccountToken.json')
 
 
 def load_raw_image(image_path):
@@ -28,7 +28,7 @@ def get_image_sizes(image_path):
 # The 'results' object contains various fields that describe the text found on the image,
 # as well as the granular text and associated boxes.
 def google_ocr_image_api(image_path):
-    client = vision.ImageAnnotatorClient()
+    client = vision.ImageAnnotatorClient(credentials=credentials)
     content = load_raw_image(image_path)
     image = vision.types.Image(content=content)
 
@@ -48,7 +48,7 @@ def google_ocr_image_api(image_path):
 # The 'results' object contains various fields that describe the regions of text
 # found in the 'document', handwriten text as well as diacritics.
 def google_ocr_doc_api(image_path):
-    client = vision.ImageAnnotatorClient()
+    client = vision.ImageAnnotatorClient(credentials=credentials)
     content = load_raw_image(image_path)
     image = vision.types.Image(content=content)
 
