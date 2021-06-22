@@ -6,8 +6,7 @@ pytesseract
 opencv-python
 langdetect
 pyspellchecker
-# googletrans
-git+https://github.com/alainrouillon/py-googletrans@feature/enhance-use-of-direct-api # googletrans unofficial PR 
+google-cloud-translate
 Babel
 # numpy (optional) if you want to plot graphs/from spell_checker_obsolete.py
 # flask (optional) already contained in the Docker image

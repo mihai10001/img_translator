@@ -2,7 +2,7 @@ from babel import Locale
 from language.language_detect import detect_language
 from language.spell_check import spell_check
 from language.string_ops import clean
-from language.translate import g_bulk_translate
+from language.google_translate import google_translate
 
 
 possible_lang_options = {
@@ -48,10 +48,7 @@ def apply_options(string_list, user_options):
 
     if user_options.get('translate'):
         to_language = user_options.get('translate_to')
-        if user_options.get('detect_lang'):
-            resulted_string_list, _ = bulk_translate_pipeline(resulted_string_list, to_language, most_probable_language)
-        else:
-            resulted_string_list, most_probable_language = bulk_translate_pipeline(string_list, to_language)
+        resulted_string_list, most_probable_language = google_translate(string_list, to_language)
 
     return resulted_string_list, most_probable_language
 
@@ -64,10 +61,3 @@ def lang_detection_pipeline(string, spell_check_option=None):
         string = spell_check(string, lang)
 
     return (string, lang)
-
-
-def bulk_translate_pipeline(string_list, to_lang, from_lang=None):
-    if from_lang:
-        return g_bulk_translate(string_list, to_lang, from_lang)
-    else:
-        return g_bulk_translate(string_list, to_lang)
