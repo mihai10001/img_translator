@@ -50,17 +50,17 @@ def home_controller(request):
 
     # React to each button accordingly
     if type_button:
-        return redirect(url_for('analyse',
+        return redirect(url_for('app.analyse',
                                 filename=secured_filename,
                                 detection_method=default_det_method,
                                 user_option=default_options))
     elif handwrite_button:
-        return redirect(url_for('analyse',
+        return redirect(url_for('app.analyse',
                                 filename=secured_filename,
                                 detection_method=default_hand_det_method,
                                 user_option=default_options))
     elif custom_button:
-        return redirect(url_for('customize', filename=secured_filename))
+        return redirect(url_for('app.customize', filename=secured_filename))
 
 
 def customize_options_controller(request, filename):
@@ -73,7 +73,7 @@ def customize_options_controller(request, filename):
     if analyse_button:
         detection_method = possible_detection_methods.get(detection_method_index)
         option = option_dumps(options_radio, translate_to)
-        return redirect(url_for('analyse', filename=filename, detection_method=detection_method, user_option=option))
+        return redirect(url_for('app.analyse', filename=filename, detection_method=detection_method, user_option=option))
 
 
 def analyse_results_controller(filename, detection_method, user_option):
