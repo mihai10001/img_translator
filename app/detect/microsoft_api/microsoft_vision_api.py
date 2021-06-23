@@ -1,4 +1,5 @@
 import time
+import os
 import ntpath
 import requests
 import json
@@ -10,7 +11,7 @@ from matplotlib.patches import Polygon
 
 # Variables to your Microsoft Computer Vision Account
 # Make sure not to make public those variables! ( Very important! Don't make it public on GitHub, etc. )
-with open(r'.\\env\\MicrosoftServiceAccountToken.json') as f:
+with open(os.path.join(os.getcwd(), 'env', 'MicrosoftServiceAccountToken.json')) as f:
     credentials = json.load(f)
 simple_headers = {'Ocp-Apim-Subscription-Key': credentials['subscription_key']}
 headers = {'Ocp-Apim-Subscription-Key': credentials['subscription_key'], 'Content-Type': 'application/octet-stream'}
@@ -210,7 +211,7 @@ def prepare_plot(image_data, image_path):
 
 
 def save_and_clear(new_image_name):
-    new_image_path = r'.\\static\\results\\' + new_image_name
+    new_image_path = os.path.join(os.getcwd(), 'static', 'results', new_image_name)
     plt.axis('off')
     plt.savefig(new_image_path, bbox_inches='tight', pad_inches=0)
     plt.clf()

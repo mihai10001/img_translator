@@ -1,10 +1,13 @@
+import os
 import six
 from google.cloud.translate_v2.client import Client
 from google.oauth2 import service_account
 
 # Path to your Google Translate Account Token
 # Make sure not to make public your Token! ( Very important! Don't make it public on GitHub, etc. )
-credentials = service_account.Credentials.from_service_account_file(r'.\\env\\GoogleServiceAccountToken.json')
+credentials = service_account.Credentials.from_service_account_file(
+    os.path.join(os.getcwd(), 'env', 'GoogleServiceAccountToken.json')
+)
 
 
 def google_translate(text, to_language):

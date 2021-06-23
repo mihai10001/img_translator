@@ -4,7 +4,7 @@
 
 import os
 import time
-from . import AbbyyOnlineSdk, ProcessingSettings
+from detect.abbyy_api.AbbyyOnlineSdk import AbbyyOnlineSdk, ProcessingSettings
 processor = None
 
 

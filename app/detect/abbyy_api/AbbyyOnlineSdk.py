@@ -3,6 +3,7 @@
 # Usage: process.py <input file> <output file> [-l <Language>] [-pdf|-txt|-rtf|-docx|-xml]
 
 import json
+import os
 
 import xml.dom.minidom
 try:
@@ -34,7 +35,7 @@ class Task:
 class AbbyyOnlineSdk:
     # Warning! This is for easier out-of-the box usage of the sample only. Change to https:// for production use
     # Change to http://cloud-westus.ocrsdk.com if you created your application in US location
-    with open(r'.\\env\\AbbyAccountToken.json') as f:
+    with open(os.path.join(os.getcwd(), 'env', 'AbbyAccountToken.json')) as f:
         credentials = json.load(f)
     ServerUrl = credentials['server_url']
 

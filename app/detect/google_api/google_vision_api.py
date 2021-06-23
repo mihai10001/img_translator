@@ -1,3 +1,4 @@
+import os
 import ntpath
 from PIL import Image
 from io import BytesIO
@@ -8,7 +9,9 @@ from google.oauth2 import service_account
 
 # Path to your Google Vision Account Token
 # Make sure not to make public your Token! ( Very important! Don't make it public on GitHub, etc. )
-credentials = service_account.Credentials.from_service_account_file(r'.\\env\\GoogleServiceAccountToken.json')
+credentials = service_account.Credentials.from_service_account_file(
+    os.path.join(os.getcwd(), 'env', 'GoogleServiceAccountToken.json')
+)
 
 
 def load_raw_image(image_path):
@@ -174,7 +177,7 @@ def prepare_plot(image_data, image_path):
 
 
 def save_and_clear(new_image_name):
-    new_image_path = r'.\\static\\results\\' + new_image_name
+    new_image_path = os.path.join(os.getcwd(), 'static', 'results', new_image_name)
     plt.axis('off')
     plt.savefig(new_image_path, bbox_inches='tight', pad_inches=0)
     plt.clf()
