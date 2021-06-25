@@ -1,6 +1,5 @@
 from flask import Blueprint, render_template, request
-import os
-from flask import Flask, render_template, request
+from detect.detection_methods import detection_methods_full_description
 from controllers import home_controller, customize_options_controller, analyse_results_controller
 
 
@@ -22,7 +21,8 @@ def customize(filename):
         if request.method == 'POST':
             return customize_options_controller(request, filename)
         elif request.method == 'GET':
-            return render_template('customize.html', filename=filename)
+            return render_template('customize.html', filename=filename,
+                                   detection_methods_description=detection_methods_full_description)
     else:
         return render_template('customize.html', error='Image not uploaded!')
 
