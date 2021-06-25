@@ -1,6 +1,7 @@
 import os
 import json
 import datetime
+from PIL import Image
 from flask import render_template, redirect, url_for
 from werkzeug.utils import secure_filename
 
@@ -22,22 +23,35 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
-def upload_file(request):
+def check_file_validity(request):
     if 'file' not in request.files:
-        return redirect(request.url)
+        return False
 
     file = request.files['file']
     if file.filename == '':
-        return redirect(request.url)
+        return False
 
-    if file and allowed_file(file.filename):
-        secured_filename = str(datetime.datetime.now().timestamp()) + secure_filename(file.filename)
-        file.save(os.path.join(UPLOAD_FOLDER, secured_filename))
-        return secured_filename
+    if not all([file, allowed_file(file.filename)]):
+        return False
+
+    return True
+
+
+def save_file(request):
+    file = request.files['file']
+    secured_filename = str(datetime.datetime.now().timestamp()) + secure_filename(file.filename)
+    image = Image.open(file)
+    image.save(os.path.join(UPLOAD_FOLDER, secured_filename), quality=30, optimize=True)
+    return secured_filename
 
 
 def home_controller(request):
-    secured_filename = upload_file(request) or ''
+    is_file_valid = check_file_validity(request)
+    if is_file_valid:
+        secured_filename = save_file(request)
+    else:
+        return redirect(request.url)
+
     # Read language input / "trigger" button values
     translate_to = request.form.get('translate_to')
     type_button = request.form.get('type_analyse')
