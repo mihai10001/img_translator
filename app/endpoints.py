@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request
 from detect.detection_methods import detection_methods_full_description
 from controllers import home_controller, customize_options_controller, analyse_results_controller
-
+from cleanup import remove_static_files
 
 app_endpoints = Blueprint('app', __name__)
 
@@ -33,3 +33,9 @@ def analyse(filename, detection_method, user_option):
         return analyse_results_controller(filename, detection_method, user_option)
     else:
         return render_template('results.html', error='Image not uploaded!')
+
+
+# Used to remove stored images periodically, as Heroku tends to complain about file sizes
+@app_endpoints.route('/cleanup')
+def cleanup_static_files():
+    remove_static_files()

@@ -1,8 +1,10 @@
+import os
 import cv2
-from pytesseract import image_to_string
-# Windows Env
 import pytesseract
-pytesseract.pytesseract.tesseract_cmd = r'X:\Code\Tesseract-OCR\tesseract.exe'
+
+# For Windows local environment
+if os.name == 'nt':
+    pytesseract.pytesseract.tesseract_cmd = r'X:\Code\Tesseract-OCR\tesseract.exe'
 
 
 def load_image(image_path, flag=cv2.IMREAD_COLOR):
@@ -15,5 +17,5 @@ def load_image(image_path, flag=cv2.IMREAD_COLOR):
 
 def pytesseract_to_string(image_path):
     image = load_image(image_path)
-    string = image_to_string(image)
+    string = pytesseract.image_to_string(image)
     return string
