@@ -33,7 +33,7 @@ def get_image_sizes(image_path):
 def google_ocr_image_api(image_path):
     client = vision.ImageAnnotatorClient(credentials=credentials)
     content = load_raw_image(image_path)
-    image = vision.types.Image(content=content)
+    image = vision.Image(content=content)
 
     response = client.text_detection(image=image)
 
@@ -45,7 +45,7 @@ def google_ocr_image_api(image_path):
         print(ex)
         return None
 
-    return response.text_annotations
+    return response.text_annotations or []
 
 
 # The 'results' object contains various fields that describe the regions of text
@@ -53,7 +53,7 @@ def google_ocr_image_api(image_path):
 def google_ocr_doc_api(image_path):
     client = vision.ImageAnnotatorClient(credentials=credentials)
     content = load_raw_image(image_path)
-    image = vision.types.Image(content=content)
+    image = vision.Image(content=content)
 
     response = client.document_text_detection(image=image)
 
@@ -65,7 +65,7 @@ def google_ocr_doc_api(image_path):
         print(ex)
         return None
 
-    return response.full_text_annotation
+    return response.full_text_annotation or []
 
 
 # The advanced mode can recognize handwritten text, and more.
@@ -73,19 +73,22 @@ def analyze_image(image_path, advanced_mode=False):
     # Load the image from the image path
     image_data = load_raw_image(image_path)
     image_name = ntpath.basename(image_path)
+    overall_text = ''
 
     if not advanced_mode:
         # Results from the Google Vision OCR API
         # Extract the words, their bounding boxes and overall text.
         ocr_results = google_ocr_image_api(image_path)
-        overall_text = ocr_results[0].description
-        words_and_boxes = analyze_ocr_results(ocr_results[1:])
+        if ocr_results:
+            overall_text = ocr_results[0].description
+            words_and_boxes = analyze_ocr_results(ocr_results[1:])
     elif advanced_mode:
         # Advanced results from the Google Vision Documents OCR API
         # Extract the words, their bounding boxes and overall text.
         ocr_results = google_ocr_doc_api(image_path)
-        overall_text = ocr_results.text
-        words_and_boxes = analyze_handwrite_results(ocr_results)
+        if ocr_results:
+            overall_text = ocr_results.text
+            words_and_boxes = analyze_handwrite_results(ocr_results)
 
     words = [word_box[0] for word_box in words_and_boxes]
     # Draw partial results
