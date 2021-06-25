@@ -7,18 +7,6 @@ from controllers import home_controller, customize_options_controller, analyse_r
 app_endpoints = Blueprint('app', __name__)
 
 
-@app_endpoints.after_request
-def add_header(r):
-    """
-    Disable caching
-    """
-    r.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
-    r.headers['Pragma'] = 'no-cache'
-    r.headers['Expires'] = '0'
-    r.headers['Cache-Control'] = 'public, max-age=0'
-    return r
-
-
 @app_endpoints.route('/', methods=['GET', 'POST'])
 def home():
     # POST: Triggered when the user presses a HTML button.

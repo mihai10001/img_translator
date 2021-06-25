@@ -1,5 +1,6 @@
 import os
 import json
+import datetime
 from flask import render_template, redirect, url_for
 from werkzeug.utils import secure_filename
 
@@ -30,7 +31,7 @@ def upload_file(request):
         return redirect(request.url)
 
     if file and allowed_file(file.filename):
-        secured_filename = secure_filename(file.filename)
+        secured_filename = str(datetime.datetime.now().timestamp()) + secure_filename(file.filename)
         file.save(os.path.join(UPLOAD_FOLDER, secured_filename))
         return secured_filename
 
