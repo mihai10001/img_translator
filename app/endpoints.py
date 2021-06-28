@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request
+from flask import Blueprint, render_template, request, Response
 from detect.detection_methods import detection_methods_full_description
 from controllers import home_controller, customize_options_controller, analyse_results_controller
 from cleanup import remove_static_files
@@ -39,3 +39,4 @@ def analyse(filename, detection_method, user_option):
 @app_endpoints.route('/cleanup')
 def cleanup_static_files():
     remove_static_files()
+    return Response(status=201)

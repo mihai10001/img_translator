@@ -17,13 +17,13 @@ possible_detection_methods = {
 detection_methods_full_description = {
     '0': {
         'name': 'microsoft',
-        'title': 'Microsoft Computer Vision API',
+        'title': 'MS Computer Vision API',
         'description': 'Word based analysis<br> Yields fast results<br>',
         'logo_image': 'ms_logo.png'
     },
     '1': {
         'name': 'microsoft_advanced',
-        'title': 'Microsoft Computer Vision API',
+        'title': 'MS Computer Vision API Advanced',
         'description': 'Line based analysis<br> Yields accurate results<br> Recognizes diacritics<br> Tipically used on documents<br>',
         'logo_image': 'ms_logo.png'
     },
@@ -35,7 +35,7 @@ detection_methods_full_description = {
     },
     '3': {
         'name': 'google_advanced',
-        'title': 'Google Vision API',
+        'title': 'Google Vision API Advanced',
         'description': 'Line based analysis<br> Yields accurate results<br> Recognizes diacritics<br> Tipically used on documents<br>',
         'logo_image': 'google_logo.png'
     },
