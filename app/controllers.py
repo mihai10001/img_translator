@@ -106,7 +106,7 @@ def analyse_results_controller(filename, detection_method, user_option):
 
 
 def google_or_microsoft_analyse(filename, file_path, detection_method, user_option):
-    to_language = user_option.get('translate_to')
+    to_language = user_option.get('translate_to', None)
     advanced_mode = True if 'advanced' in detection_method else False
 
     if 'google' in detection_method:
@@ -115,15 +115,19 @@ def google_or_microsoft_analyse(filename, file_path, detection_method, user_opti
         overall_text, words, words_and_boxes = ms_analyze(file_path, advanced_mode)
 
     if all([overall_text, words, words_and_boxes]):
-        translated_text = apply_options([overall_text], user_option)[0].pop()
-        translated_words, det_lang = apply_options(words, user_option)
-        from_to_words_dict = {words[i]: translated_words[i] for i in range(0, len(words))}
-        translated_words_and_boxes = [[translated_words[i], word_box[1]] for i, word_box in enumerate(words_and_boxes)]
-        if 'google' in detection_method:
-            g_draw_results(translated_words_and_boxes, None, file_path, filename, 'translated')
-        elif 'microsoft' in detection_method:
-            ms_draw_results(translated_words_and_boxes, None, file_path, filename, 'translated', advanced_mode)
+        translated_text, det_lang, translation_status = apply_options([overall_text], user_option)
+        translated_words, det_lang, translation_status = apply_options(words, user_option)
+        from_to_words_dict = {}
 
+        if translation_status == 'success':
+            from_to_words_dict = {words[i]: translated_words[i] for i in range(0, len(words))}
+            translated_words_and_boxes = [[translated_words[i], word_box[1]] for i, word_box in enumerate(words_and_boxes)]
+            if 'google' in detection_method:
+                g_draw_results(translated_words_and_boxes, None, file_path, filename, 'translated')
+            elif 'microsoft' in detection_method:
+                ms_draw_results(translated_words_and_boxes, None, file_path, filename, 'translated', advanced_mode)   
+
+        translated_text = translated_text.pop()
         overall_text = overall_text.replace('\n', '<br />')
         translated_text = translated_text.replace('\n', '<br />')
 
@@ -136,13 +140,14 @@ def google_or_microsoft_analyse(filename, file_path, detection_method, user_opti
             from_to_words=from_to_words_dict,
             original_filename=filename,
             partial_filename='granular_partial_' + filename,
-            translated_filename='granular_translated_' + filename)
+            translated_filename='granular_translated_' + filename,
+            translation_status=translation_status)
     else:
         return render_template('results.html', error='There was no text detected or the image was not accepted by the API!')
 
 
 def tesseract_or_abby_analyse(file_path, detection_method, user_option):
-    to_language = user_option.get('translate_to')
+    to_language = user_option.get('translate_to', None)
 
     if detection_method == 'tesseract':
         overall_text = pytesseract_to_string(file_path)
@@ -150,7 +155,7 @@ def tesseract_or_abby_analyse(file_path, detection_method, user_option):
         overall_text = abbyy_to_string(file_path)
 
     if overall_text:
-        translated_text, det_lang = apply_options([overall_text], user_option)
+        translated_text, det_lang, translation_status = apply_options([overall_text], user_option)
         translated_text = translated_text.pop()
         overall_text = overall_text.replace('\n', '<br />')
         translated_text = translated_text.replace('\n', '<br />')
@@ -160,7 +165,8 @@ def tesseract_or_abby_analyse(file_path, detection_method, user_option):
             detected_language=det_lang,
             to_language=to_language,
             original_text=overall_text,
-            translated_text=translated_text)
+            translated_text=translated_text,
+            translation_status=translation_status)
     else:
         return render_template('results.html', error='There was no text detected or the image was not accepted by the API!')
 

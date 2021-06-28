@@ -2,6 +2,7 @@ import os
 import six
 from google.cloud.translate_v2.client import Client
 from google.oauth2 import service_account
+from google.api_core.exceptions import BadRequest
 
 # Path to your Google Translate Account Token
 # Make sure not to make public your Token! ( Very important! Don't make it public on GitHub, etc. )
@@ -22,7 +23,10 @@ def google_translate(text, to_language):
 
     # Text can also be a sequence of strings, in which case this method
     # will return a sequence of results for each text.
-    translated_results = translate_client.translate(text, target_language=to_language, format_='text')
-    detected_langs = [result['detectedSourceLanguage'] for result in translated_results]
-    most_probable_language = max(set(detected_langs), key=detected_langs.count)
-    return [result['translatedText'] for result in translated_results], most_probable_language
+    try:
+        translated_results = translate_client.translate(text, target_language=to_language, format_='text')
+        detected_langs = [result['detectedSourceLanguage'] for result in translated_results]
+        most_probable_language = max(set(detected_langs), key=detected_langs.count)
+        return [result['translatedText'] for result in translated_results], most_probable_language, 'success'
+    except BadRequest:
+        return text, 'none', 'error'

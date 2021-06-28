@@ -37,6 +37,7 @@ def get_country_language(country):
 
 def apply_options(string_list, user_options):
     most_probable_language = None
+    translation_status = None
     resulted_string_list = string_list
 
     if user_options.get('detect_lang'):
@@ -48,9 +49,9 @@ def apply_options(string_list, user_options):
 
     if user_options.get('translate'):
         to_language = user_options.get('translate_to')
-        resulted_string_list, most_probable_language = google_translate(string_list, to_language)
+        resulted_string_list, most_probable_language, translation_status = google_translate(string_list, to_language)
 
-    return resulted_string_list, most_probable_language
+    return resulted_string_list, most_probable_language, translation_status
 
 
 def lang_detection_pipeline(string, spell_check_option=None):
