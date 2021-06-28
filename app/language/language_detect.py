@@ -1,11 +1,15 @@
 from langdetect import detect_langs
+from langdetect.lang_detect_exception import LangDetectException
 
 
 def detect_language(string):
     # Detect the languages using the detect_langs() method
     # Returns a list containing <class 'langdetect.language.Language'> objects,
     # which are all possible detected languages, including their probabilites
-    langs = detect_langs(string)
+    try:
+        langs = detect_langs(string)
+    except LangDetectException:
+        return 'error', '0'
 
     # Get the first element, the most probable detected language
     probable_lang = langs[0]

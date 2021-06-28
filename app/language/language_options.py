@@ -58,6 +58,9 @@ def lang_detection_pipeline(string, spell_check_option=None):
     string = clean(string)
     lang, prob = detect_language(string)
 
+    if lang == 'error':
+        return (string, 'error')
+
     if spell_check_option:
         string = spell_check(string, lang)
 

@@ -59,8 +59,8 @@ def home_controller(request):
     custom_button = request.form.get('custom_analyse')
 
     # Set default detection method
-    default_det_method = 'google'
-    default_hand_det_method = 'google_advanced'
+    default_det_method = 'microsoft'
+    default_hand_det_method = 'microsoft_advanced'
     default_options = option_dumps('0', translate_to)
 
     # React to each button accordingly
@@ -173,7 +173,8 @@ def tesseract_or_abby_analyse(file_path, detection_method, user_option):
 
 def option_dumps(options_index, translate_to):
     selected_option = possible_lang_options.get(options_index)
-    selected_option['translate_to'] = get_country_language(translate_to)
+    if selected_option.get('translate') == 'true':
+        selected_option['translate_to'] = get_country_language(translate_to)
     return json.dumps(selected_option)
 
 
