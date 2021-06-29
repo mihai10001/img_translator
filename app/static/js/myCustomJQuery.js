@@ -31,3 +31,30 @@ function enableCountrySelect(countrySelector) {
       });
 }
 
+
+function toggleCountrySelect(toggleOnSelector, toggleOffSelector, countrySelector) {
+    $(toggleOnSelector).on('click', function (e) {
+      $(countrySelector).prop('disabled', false);
+    });
+    $(toggleOffSelector).on('click', function (e) {
+      $(countrySelector).prop('disabled', true);
+    });
+}
+
+
+function enableCarousel() {
+    $('#method_carousel').on('slide.bs.carousel', function (e) {
+        document.getElementById("carousel_index").value = e.to;
+      })
+}
+
+
+function switchAccordionSigns(accordionSelector, switchIconSelector) {
+    $(accordionSelector).on('hide.bs.collapse', function (e) {
+        $(switchIconSelector).html('<i class="fas fa-plus"></i>');
+      });
+    $(accordionSelector).on('show.bs.collapse', function (e) {
+        $(switchIconSelector).html('<i class="fas fa-minus"></i>');
+    });
+}
+

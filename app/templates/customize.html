@@ -1,0 +1,216 @@
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/country-select-js/2.0.2/css/countrySelect.min.css" integrity="sha512-HHSUgqDtmyVfGT0pdLVRKcktf9PfLMfFzoiBjh9NPBzw94YFTS5DIwZ12Md/aDPcrkOstXBp9uSAOCl5W2/AOQ==" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/myCustomCSS.css') }}">
+    
+    <title>OCR and Translate</title>
+  </head>
+  <body class="py-2 bg-color">
+
+    <nav class="fixed-top bg-dark rounded-bottom">
+      <div class="container mt-2">
+        <div class="row">
+          <div class="col-4 col-md-7 col-lg-8 pl-1 h4 color-lightskyblue text-truncate">
+            <span class="ml-2 d-none d-md-inline">
+              <a href="{{ url_for('app.home') }}" style="color: inherit; text-decoration:none">
+                OCR and Translate
+              </a>
+            </span>
+          </div>
+          <div class="col-8 col-md-5 col-lg-4 pr-1 text-right">
+            <i class="fas fa-cogs mr-2 text-secondary" style="font-size: 1.5rem; transform: translateY(5px);"></i>
+            <form method="POST" class="d-inline">
+              <a href="{{ url_for('app.home') }}">
+                <button type="button" class="btn btn-sm bg-light">
+                  <span class="btn-label"><i class="fas fa-home"></i></span>
+                  Home
+                </button>
+              </a>
+            </form>
+            <button type="button" class="btn btn-sm bg-light" onClick="window.location.reload()">
+              <i class="fas fa-redo-alt my-1"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container" style="height: 4%"></div>
+
+    <div class="container mt-3 px-3">
+      <div class="row">
+        <div class="col-lg-12 p-1" id="accordion">
+          <div class="card border-0 neu-morphism">
+            <div class="card-header border-0 h5 p-2" style="cursor: pointer">
+              <div class="d-block p-2" data-toggle="collapse" data-target="#collapseBody" aria-expanded="true" aria-controls="collapseBody">
+                <i class="fas fa-image mr-2"></i>
+                Preview
+                <span class="float-right" id="switchIcon">
+                 <i class="fas fa-plus"></i>
+                </span>
+              </div>
+            </div>
+            <div id="collapseBody" class="collapse" data-parent="#accordion">
+              <div class="card-body p-2">
+                {% if filename %}
+                  <div class="lead text-center text-success mb-2">Image uploaded succesfully: <b>{{ filename }}</b></div>
+                  <img src="{{url_for('static', filename='results/' + filename)}}" class="rounded mx-auto d-block w-25">
+                {% else %}
+                  <div>No image uploaded yet !</div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="container" style="height: 5%"></div>
+
+      <form method="POST">
+        <div class="row justify-content-between">
+          <div class="col-lg-6 p-1">
+            <div class="card h-100 border-0 neu-morphism">
+              <div class="card-header h5 p-3">
+                <i class="fas fa-diagnoses mr-2"></i>
+                <b>Step 1</b>
+                <div class="mt-3 lead text-truncate">Detection method</div>
+              </div>
+
+              <div class="card-body p-0">
+                <input type="hidden" id="carousel_index" name="carousel_index" value="0"/>
+
+                <div id="method_carousel" class="carousel slide h-100" data-interval="false">
+
+                  <!-- Indicators -->
+                  <ul class="carousel-indicators">
+                    {%for (key, detection_method) in detection_methods_description.items()%}
+                      <li data-target="#method_carousel" data-slide-to="{{key}}"
+                        class="{{ 'active' if key == '0' else 'not-active' }}">
+                      </li>
+                    {%endfor%}
+                    
+                  </ul>
+
+                  <!-- The slideshow -->
+                  <div class="carousel-inner">
+                    {%for (key, detection_method) in detection_methods_description.items()%}
+                      <div class="carousel-item {{ 'active' if key == '0' else 'not-active' }}">
+                        <div class="row my-2">
+                          <div class="col-1"></div>
+                          <div class="col-12 col-lg-4">
+                            <img src="{{url_for('static', filename='img/' + detection_method['logo_image'])}}"
+                              class="rounded mx-auto d-block" width="160" />
+                          </div>
+                          <div class="col-lg-6">
+                            <div class="h5 mt-2 text-center text-lg-left">
+                              {{ detection_method['title'] }}
+                            </div>
+                            <div class="mt-2 d-none d-lg-block">
+                              {{ detection_method['description'] | safe }}
+                            </div>
+                          </div>
+                          <div class="col-1"></div>
+                        </div>
+                      </div>
+                    {%endfor%}
+                  </div> 
+
+                  <!-- Left and right controls -->
+                  <a class="carousel-control-prev" href="#method_carousel" data-slide="prev">
+                    <span class="carousel-control-prev-icon"></span>
+                  </a>
+                  <a class="carousel-control-next" href="#method_carousel" data-slide="next">
+                    <span class="carousel-control-next-icon"></span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-7 col-lg-3 p-1">
+            <div class="card h-100 border-0 neu-morphism">
+              <div class="card-header h5 p-3">
+                <i class="fas fa-globe-europe mr-2"></i>
+                <b>Step 2</b>
+                <div class="mt-3 lead text-truncate">Translation options</div>
+              </div>
+
+              <div class="card-body p-2 d-flex align-items-center">
+                <div class="btn-group-vertical btn-group-toggle w-100 custom-button-group" data-toggle="buttons">
+                  <label class="btn btn-secondary pt-1 active enable-country custom-select-button">
+                    <input type="radio" name="options_radio" value="0" autocomplete="off" checked>
+                    Translate
+                    <span class="float-right">[ Default ]</span>
+                  </label>
+                  <label class="btn btn-secondary pt-1 enable-country custom-select-button">
+                    <input type="radio" name="options_radio" value="1" autocomplete="off">
+                    Language det. and ranslate
+                  </label>
+                  <label class="btn btn-secondary pt-1 disable-country custom-select-button">
+                    <input type="radio" name="options_radio" value="4" autocomplete="off">
+                    No translate
+                  </label>
+                  <label class="btn btn-secondary pt-1 disabled">
+                    <input type="radio" name="options_radio" value="2" autocomplete="off" disabled>
+                    LangDet | SpellCheck | Translate
+                  </label>
+                  <label class="btn btn-secondary pt-1 disabled">
+                    <input type="radio" name="options_radio" value="3" autocomplete="off" disabled>
+                    LangDet | SpellCheck
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-5 col-lg-2 p-1">
+            <div class="card h-100 border-0 neu-morphism">
+              <div class="card-header h5 p-3">
+                <i class="fas fa-atlas mr-2"></i>
+                <b>Step 3</b>
+                <div class="lead mt-3 text-truncate">
+                  Translate to
+                  <i class="fas fa-exchange-alt text-secondary ml-2"></i>
+                </div>
+              </div>
+
+              <div class="card-body p-2">
+                <div class="input-group mb-2">
+                  <input type="text" id="country" class="form-control text-truncate">
+                  <input type="hidden" id="country_code" name="translate_to"/>
+                </div>
+                <button type="submit" name="analyse_button" value="analyse" class="btn btn-block bg-dark text-white h-75" id="analyse_button">
+                  <i class="fas fa-check-circle mr-1" style="color: limegreen"></i>
+                  Analyze
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+
+      <div class="lead mt-5 top text-center text-dark">Tip: You can press Analyze without changing anything else</div>
+    </div>
+
+    <div class="d-none" id="spinner">
+      <img src="{{ url_for('static', filename='img/loading-ellipsis.gif') }}" width="150" class="rounded mx-auto d-block">
+    </div>
+
+    <!-- JavaScript, jQuery and CountrySelect -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/country-select-js/2.0.2/js/countrySelect.min.js" integrity="sha512-agmFjG7H3K/n7ca70w6lzdO0MxUFWYcaDrw5WpwBMjhXxfrchssrKyZrJOSEN7q4vIeTcHUX5A7mM6zjbE2ZAA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="{{ url_for('static', filename='js/myCustomJQuery.js') }}"></script>
+
+    <script>
+      enableCountrySelect('#country');
+      toggleCountrySelect('.enable-country', '.disable-country', '#country');
+      enableCarousel();
+      switchAccordionSigns('#accordion', '#switchIcon');
+      showSpinnerOnButton('#spinner', '#analyse_button');
+    </script>
+</body>
