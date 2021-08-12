@@ -6,7 +6,7 @@ Similar to Google Translate but contains multiple detection, translation and spe
 
 
 ### Implementation  
-SPA application made with Python, using the Flask framework in order to build the backend and serve static content (HTML pages)  
+Web application made with Python, using the Flask framework in order to build the backend and serve static content (HTML pages)  
 Uses Google, Microsoft and ABBY APIs in order to detect text online, or has the option to detect text locally using the Tesseract SDK   
 Uses Google Translate API for translations   
 JQuery to create frontend interactions  
